@@ -1,6 +1,6 @@
 class TypesController < ApplicationController
   before_action :set_type, only: [:show, :edit, :update, :destroy]
-
+  before_action :admin_only
   # GET /types
   # GET /types.json
   def index
@@ -72,3 +72,13 @@ class TypesController < ApplicationController
       params.require(:type).permit(:name)
     end
 end
+
+private
+
+def admin_only
+ if !current_user.admin?
+ redirect_to root_path
+ end
+end
+
+

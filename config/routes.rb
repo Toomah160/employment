@@ -6,13 +6,15 @@ Rails.application.routes.draw do
   resources :users
   
   root to: 'visitors#index'
-  #root 'jobs#new'
-  
-  get 'sessions/new' => 'sessions#new', as: :login
-  delete 'sessions/destroy' => 'sessions#destroy', as: :logout
-  
-  get '/signup' => 'users#new', as: :signup
-  
+ 
+ get 'signup' => 'users#new'
+ get 'login' => 'sessions#new'
+ post 'login' => 'sessions#create'
+ delete 'logout' => 'sessions#destroy'
+ 
+  resources :users do
+ get :make_admin, on: :member
+ end
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

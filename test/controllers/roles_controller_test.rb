@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class RolesControllerTest < ActionController::TestCase
+  
   setup do
     @role = roles(:one)
   end

@@ -24,7 +24,7 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.json
   def create
-    @user = User.new(users_params)
+    @user = User.new(user_params)
 
     respond_to do |format|
       if @user.save
@@ -61,14 +61,30 @@ class UsersController < ApplicationController
     end
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
+ private
+ 
+def set_user
+ @user = User.find(params[:id])
+ if @user == current_user || current_user.admin?
+ return @user
+ else
+ redirect_to root_path
+end
+end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
       params.require(:user).permit(:name, :email, :password, :role_id)
     end
+end
+
+def make_admin
+ @user.toggle!(:admin)
+ if @user.save
+ redirect_to users_path, notice: 'User was
+successfully updated.'
+ else
+ flash[:alert]= 'Error updating user'
+ redirect_to users_path
+ end
 end

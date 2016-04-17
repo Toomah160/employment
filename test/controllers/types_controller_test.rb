@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class TypesControllerTest < ActionController::TestCase
+  
   setup do
     @type = types(:one)
   end

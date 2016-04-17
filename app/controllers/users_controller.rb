@@ -81,10 +81,10 @@ end
 def make_admin
  @user.toggle!(:admin)
  if @user.save
- redirect_to users_path, notice: 'User was
-successfully updated.'
+ redirect_to users_path, notice: 'User was successfully updated.'
  else
  flash[:alert]= 'Error updating user'
  redirect_to users_path
  end
+ 
 end

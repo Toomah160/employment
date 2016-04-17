@@ -1,6 +1,9 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :make_admin]
+  before_action :admin_only, only: [:index, :make_admin]
   skip_before_action :authenticate, only: [:new, :create]
+
+
   # GET /users
   # GET /users.json
   def index
@@ -50,7 +53,7 @@ class UsersController < ApplicationController
       end
     end
   end
-  
+
   # DELETE /users/1
   # DELETE /users/1.json
   def destroy
@@ -61,30 +64,44 @@ class UsersController < ApplicationController
     end
   end
 
- private
- 
-def set_user
- @user = User.find(params[:id])
- if @user == current_user || current_user.admin?
- return @user
- else
- redirect_to root_path
-end
-end
+   def make_admin
+      @user.toggle!(:admin)
+      if @user.save
+        redirect_to users_path, notice: 'User was
+    successfully updated.'
+      else
+        flash[:alert]= 'Error updating user'
+        redirect_to users_path
+      end
+    end
+
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    # def set_user
+    #   @user = User.find(params[:id])
+    # end
 
     # Never trust parameters from the scary internet, only allow the white list through.
-    def user_params
-      params.require(:user).permit(:name, :email, :password, :role_id)
+    
+    def set_user
+      @user = User.find(params[:id])
+      if @user == current_user || current_user.admin?
+        return @user
+      else
+        redirect_to root_path
+      end
     end
-end
 
-def make_admin
- @user.toggle!(:admin)
- if @user.save
- redirect_to users_path, notice: 'User was successfully updated.'
- else
- flash[:alert]= 'Error updating user'
- redirect_to users_path
- end
- 
+    def user_params
+      params.require(:user).permit(:name, :email, :password, :role_id, :admin)
+    end
+
+    def admin_only
+      if !current_user.admin?
+        redirect_to root_path
+      end
+    end 
+
+
 end

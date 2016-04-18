@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :jobs
   resources :roles
   resources :users
+  resources :about
   
   root to: 'visitors#index'
  
@@ -11,6 +12,7 @@ Rails.application.routes.draw do
  get 'login' => 'sessions#new'
  post 'login' => 'sessions#create'
  delete 'logout' => 'sessions#destroy'
+#get "/pages/:about" =>"pages#show"
  
   resources :users do
  get :make_admin, on: :member
